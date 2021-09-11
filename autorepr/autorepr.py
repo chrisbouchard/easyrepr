@@ -4,10 +4,6 @@ import types
 __all__ = ["autorepr"]
 
 
-def autorepr(attributes_fn, *, style=None):
-    return AutoRepr(attributes_fn, style)
-
-
 def angle_style(klass_name, attributes):
     formatted_args = " ".join(f"{k}={v!r}" for k, v in attributes)
     if formatted_args:
@@ -20,7 +16,7 @@ def call_style(klass_name, attributes):
     return f"{klass_name}({formatted_args})"
 
 
-class AutoRepr:
+class autorepr:
     default_style = call_style
 
     def __init__(self, attributes_fn, style):
@@ -47,7 +43,7 @@ class AutoRepr:
         for mro_type in type(instance).__mro__:
             repr_fn = getattr(mro_type, "__repr__", None)
 
-            if not isinstance(super_repr, AutoRepr):
+            if not isinstance(repr_fn, autorepr):
                 continue
 
             if repr_fn.style is not None and style_fn is None:
