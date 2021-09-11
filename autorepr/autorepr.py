@@ -1,7 +1,7 @@
 import types
 
 
-__all__ = ['AutoRepr', 'autorepr']
+__all__ = ["AutoRepr", "autorepr"]
 
 
 def autorepr(attributes_fn):
