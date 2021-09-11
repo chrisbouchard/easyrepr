@@ -46,7 +46,7 @@ class AutoRepr:
         style_fn = None
 
         for super_type in super_types:
-            super_repr = super_type.__repr__
+            super_repr = getattr(super_type, "__repr__", None)
 
             if not isinstance(super_repr, AutoRepr):
                 continue
