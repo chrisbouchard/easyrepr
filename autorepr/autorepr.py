@@ -34,10 +34,10 @@ class AutoRepr:
             if not isinstance(super_repr, AutoRepr):
                 continue
 
-            attributes[0:0] = super_repr.attributes_fn(instance)
+            new_names = super_repr.attributes_fn(instance)
+            attributes[0:0] = ((name, getattr(instance, name)) for name in new_names)
 
         klass = type(instance).__qualname__
-        args = (f"{attr}={getattr(instance, attr)}" for attr in attributes)
 
-        joined_args = ", ".join(args)
-        return f"{klass}({joined_args})"
+        formatted_args = ", ".join(f"{k}={v!r}" for k, v in attributes)
+        return f"{klass}({formatted_args})"
