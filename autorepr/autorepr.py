@@ -41,20 +41,19 @@ class AutoRepr:
         return types.MethodType(self, instance)
 
     def __call__(self, instance):
-        super_types = type(instance).__mro__
         attributes = []
         style_fn = None
 
-        for super_type in super_types:
-            super_repr = getattr(super_type, "__repr__", None)
+        for mro_type in type(instance).__mro__:
+            repr_fn = getattr(mro_type, "__repr__", None)
 
             if not isinstance(super_repr, AutoRepr):
                 continue
 
-            if super_repr.style is not None and style_fn is None:
-                style_fn = self._resolve_style(super_repr.style)
+            if repr_fn.style is not None and style_fn is None:
+                style_fn = self._resolve_style(repr_fn.style)
 
-            new_names = super_repr.attributes_fn(instance)
+            new_names = repr_fn.attributes_fn(instance)
             attributes[0:0] = ((name, getattr(instance, name)) for name in new_names)
 
         if style_fn is None:
