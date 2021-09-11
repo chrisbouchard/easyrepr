@@ -17,9 +17,7 @@ def call_style(klass_name, attributes):
 
 
 class autorepr:
-    default_style = call_style
-
-    def __init__(self, attributes_fn, style):
+    def __init__(self, attributes_fn, *, style=None):
         self.attributes_fn = attributes_fn
         self.style = style
 
@@ -53,10 +51,13 @@ class autorepr:
             attributes[0:0] = ((name, getattr(instance, name)) for name in new_names)
 
         if style_fn is None:
-            style_fn = self._resolve_style(self.default_style)
+            style_fn = self._resolve_style(self._default_style())
 
         klass_name = type(instance).__qualname__
         return style_fn(klass_name, attributes)
+
+    def _default_style(self):
+        return call_style
 
     def _resolve_style(self, style):
         if style == "<>":
