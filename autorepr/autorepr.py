@@ -5,18 +5,6 @@ import types
 __all__ = ["autorepr"]
 
 
-def angle_style(klass_name, attributes):
-    formatted_args = " ".join(f"{k}={v!r}" for k, v in attributes)
-    if formatted_args:
-        formatted_args = " " + formatted_args
-    return f"<{klass_name}{formatted_args}>"
-
-
-def call_style(klass_name, attributes):
-    formatted_args = ", ".join(f"{k}={v!r}" for k, v in attributes)
-    return f"{klass_name}({formatted_args})"
-
-
 class autorepr:
     def __init__(self, wrapped, *, style=None):
         functools.update_wrapper(self, wrapped)
@@ -61,3 +49,15 @@ class autorepr:
         elif style == "()":
             return call_style
         return style
+
+
+def angle_style(klass_name, attributes):
+    formatted_args = " ".join(f"{k}={v!r}" for k, v in attributes)
+    if formatted_args:
+        formatted_args = " " + formatted_args
+    return f"<{klass_name}{formatted_args}>"
+
+
+def call_style(klass_name, attributes):
+    formatted_args = ", ".join(f"{k}={v!r}" for k, v in attributes)
+    return f"{klass_name}({formatted_args})"
