@@ -3,10 +3,25 @@ import itertools
 import types
 
 
-__all__ = ["autorepr"]
+__all__ = [
+    "AutoRepr",
+    "angle_style",
+    "autorepr",
+    "call_style",
+    "format_attribute",
+]
 
 
 def autorepr(wrapped=None, **kwargs):
+    """Decorator for an automatic `__repr__` method.
+
+    This decorator wraps a function (which is available as `__wrapped__`). The
+    wrapped function should return a description of the attributes that should
+    be included in the repr.
+
+    See `AutoRepr` for a full description.
+    """
+
     def _autorepr(_wrapped):
         return AutoRepr(_wrapped, **kwargs)
 
@@ -17,6 +32,31 @@ def autorepr(wrapped=None, **kwargs):
 
 
 class AutoRepr:
+    """Descriptor for an automatic `__repr__` method.
+
+    This descriptor wraps a function (which is available as __wrapped__). The
+    wrapped function should return a description of the attributes that should
+    be included in the repr.
+
+    Valid descriptions include:
+        * `None` -- include all attributes of the instance (via vars(instance))
+        * An iterable containing:
+            * `name` -- include the attribute with the given name
+            * `(key, value)` -- include a virtual attribute
+            * `(value,)` -- include a nameless virtual attribute
+
+    The style of the repr string returned is determined by the `style` argument,
+    which may be one of:
+        * `"()"` -- use the "call" style, defined by `call_style`
+            * E.g., `"Foo(a=1, b=2)"`
+        * `"<>"` -- use the "angle" style, defined by `angle_style`
+            * E.g., `"<Foo a=1 b=2>"`
+        * `fn` -- use a user-defined style function, which should accept three
+          arguments: the object instance, the computed class name, and an
+          iterable of attributes, which may be either `(key, value)` or
+          `(value,)`, as described above.
+    """
+
     def __init__(self, wrapped, *, style=None):
         functools.update_wrapper(self, wrapped)
         self.style = style
@@ -90,6 +130,7 @@ class AutoRepr:
 
 
 def angle_style(instance, klass_name, attributes):
+    """a"""
     formatted_attributes = map(format_attribute, attributes)
     name_and_attributes = itertools.chain((klass_name,), formatted_attributes)
     joined_contents = " ".join(name_and_attributes)
