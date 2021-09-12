@@ -1,3 +1,4 @@
+import functools
 import types
 
 
@@ -17,14 +18,9 @@ def call_style(klass_name, attributes):
 
 
 class autorepr:
-    def __init__(self, attributes_fn, *, style=None):
-        self.attributes_fn = attributes_fn
+    def __init__(self, wrapped, *, style=None):
+        functools.update_wrapper(self, wrapped)
         self.style = style
-
-        self.__doc__ = attributes_fn.__doc__
-        self.__module__ = attributes_fn.__module__
-        self.__name__ = attributes_fn.__name__
-        self.__qualname__ = attributes_fn.__qualname__
 
     def __set_name__(self, owner, name):
         self.__objclass__ = owner
@@ -47,7 +43,7 @@ class autorepr:
             if repr_fn.style is not None and style_fn is None:
                 style_fn = self._resolve_style(repr_fn.style)
 
-            new_names = repr_fn.attributes_fn(instance)
+            new_names = repr_fn.__wrapped__(instance)
             attributes[0:0] = ((name, getattr(instance, name)) for name in new_names)
 
         if style_fn is None:
