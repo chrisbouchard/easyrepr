@@ -48,7 +48,7 @@ class AutoRepr:
             style_fn = self._resolve_style(self._default_style())
 
         klass_name = type(instance).__qualname__
-        return style_fn(klass_name, attributes)
+        return style_fn(instance, klass_name, attributes)
 
     def _default_style(self):
         return call_style
@@ -61,13 +61,13 @@ class AutoRepr:
         return style
 
 
-def angle_style(klass_name, attributes):
+def angle_style(instance, klass_name, attributes):
     formatted_args = " ".join(f"{k}={v!r}" for k, v in attributes)
     if formatted_args:
         formatted_args = " " + formatted_args
     return f"<{klass_name}{formatted_args}>"
 
 
-def call_style(klass_name, attributes):
+def call_style(instance, klass_name, attributes):
     formatted_args = ", ".join(f"{k}={v!r}" for k, v in attributes)
     return f"{klass_name}({formatted_args})"
