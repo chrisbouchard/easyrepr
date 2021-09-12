@@ -5,7 +5,17 @@ import types
 __all__ = ["autorepr"]
 
 
-class autorepr:
+def autorepr(wrapped=None, **kwargs):
+    def _autorepr(_wrapped):
+        return AutoRepr(_wrapped, **kwargs)
+
+    if wrapped is None:
+        return _autorepr
+
+    return _autorepr(wrapped)
+
+
+class AutoRepr:
     def __init__(self, wrapped, *, style=None):
         functools.update_wrapper(self, wrapped)
         self.style = style
@@ -25,7 +35,7 @@ class autorepr:
         for mro_type in type(instance).__mro__:
             repr_fn = getattr(mro_type, "__repr__", None)
 
-            if not isinstance(repr_fn, autorepr):
+            if not isinstance(repr_fn, AutoRepr):
                 continue
 
             if repr_fn.style is not None and style_fn is None:
