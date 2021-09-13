@@ -1,6 +1,7 @@
 import functools
 import itertools
 import types
+from collections.abc import Sequence
 
 
 __all__ = [
@@ -34,15 +35,15 @@ def autorepr(wrapped=None, **kwargs):
     See :class:`AutoRepr` for a full description of the accepted arguments.
 
     This function may be called with all arguments (``wrapped`` and keyword
-    arguments) up-front::
+    arguments) up-front ::
 
         autorepr(fn, style="<>")
 
-    or it may be split.::
+    or it may be split ::
 
         autorepr(style="<>")(fn)
 
-    This is to make it easier to use this function as a decorator.
+    to make it easier to use this function as a decorator.
     """
 
     def _autorepr(_wrapped):
@@ -57,12 +58,17 @@ def autorepr(wrapped=None, **kwargs):
 class _AutoReprBootstrap(type):
     def __new__(cls, name, bases, dct):
         klass = super().__new__(cls, name, bases, dct)
-        klass.__repr__ = klass(klass.__repr__, style="<>")
+        klass.__repr__ = klass(klass.__repr__)
         return klass
 
 
 class AutoRepr(metaclass=_AutoReprBootstrap):
     """Descriptor for an automatic ``__repr__`` method.
+
+    :param wrapped: the wrapped function
+    :param skip_private: skip attributes whose names start with ``_`` when
+      finding attributes for ``None`` or ``...``.
+    :param style: the style to use
 
     This descriptor wraps a function (which is available as ``__wrapped__``).
     The wrapped function should return a description of the attributes that
@@ -72,14 +78,15 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
 
     * ``None`` --- include all attributes of the instance (via :func:`vars`)
 
-      *Note:* A function whose body is ``pass`` or ``...`` implicitly returns
-      `None``.
+      .. note:: A function whose body is ``pass`` or ``...`` implicitly returns
+         ``None``.
 
     * An iterable containing zero or more of any of the following:
 
       * :class:`str` --- include the attribute with the given name
       * ``(key, value)`` --- include a virtual attribute
       * ``(value,)`` --- include a nameless virtual attribute
+      * ``...`` --- include all attributes of the instance (via :func:`vars`)
 
     The style of the repr string returned is determined by the ``style`` argument,
     which may be one of:
@@ -98,8 +105,9 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
       ``(key, value)`` or ``(value,)``, as described above.
     """
 
-    def __init__(self, wrapped, *, style=None):
+    def __init__(self, wrapped, *, skip_private=True, style=None):
         functools.update_wrapper(self, wrapped)
+        self.skip_private = skip_private
         self.style = style
 
     def __set_name__(self, owner, name):
@@ -137,13 +145,20 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
     # yet -- it needs *this* class to be defined. Instead, our metaclass,
     # AutoReprBootstrap, will replace this method with an AutoRepr instance.
     def __repr__(self):
-        ...
+        return (("wrapped", self.__wrapped__), ...)
 
     def _default_style(self):
         return call_style
 
     def _find_all_attributes(self, instance):
-        return vars(instance).items()
+        attributes = vars(instance).items()
+
+        if self.skip_private:
+            attributes = (
+                (name, value) for name, value in attributes if not name.startswith("_")
+            )
+
+        return attributes
 
     def _parse_repr_return_value(self, instance, return_value):
         if return_value is None:
@@ -155,16 +170,20 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
 
         for item in return_value:
             if isinstance(item, str):
-                attribute = (item, getattr(instance, item))
+                attributes.append(
+                    (item, getattr(instance, item)),
+                )
+            elif item == Ellipsis:
+                attributes.extend(self._find_all_attributes(instance))
             else:
-                attribute = item
+                if not isinstance(item, Sequence):
+                    raise ValueError(f"attribute is not a sequence: {item}")
+                if len(item) < 1:
+                    raise ValueError(f"empty attribute: {item}")
+                if len(item) > 2:
+                    raise ValueError(f"attribute has too many items: {item!r}")
 
-                if len(attribute) < 1:
-                    raise ValueError(f"empty attribute: {attribute}")
-                if len(attribute) > 2:
-                    raise ValueError(f"attribute has too many items: {attribute!r}")
-
-            attributes.append(attribute)
+                attributes.append(tuple(item))
 
         return attributes
 
