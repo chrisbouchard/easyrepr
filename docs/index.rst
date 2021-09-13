@@ -6,15 +6,10 @@
 Welcome to autorepr's documentation!
 ====================================
 
+API Reference
+-------------
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   api
