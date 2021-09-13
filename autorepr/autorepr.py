@@ -31,7 +31,14 @@ def autorepr(wrapped=None, **kwargs):
     return _autorepr(wrapped)
 
 
-class AutoRepr:
+class _AutoReprBootstrap(type):
+    def __new__(cls, name, bases, dct):
+        klass = super().__new__(cls, name, bases, dct)
+        klass.__repr__ = klass(klass.__repr__, style="<>")
+        return klass
+
+
+class AutoRepr(metaclass=_AutoReprBootstrap):
     """Descriptor for an automatic `__repr__` method.
 
     This descriptor wraps a function (which is available as __wrapped__). The
@@ -91,6 +98,12 @@ class AutoRepr:
 
         klass_name = type(instance).__qualname__
         return style_fn(instance, klass_name, attributes)
+
+    # This method is not annotated with @autorepr because it's not available
+    # yet -- it needs *this* class to be defined. Instead, our metaclass,
+    # AutoReprBootstrap, will replace this method with an AutoRepr instance.
+    def __repr__(self):
+        ...
 
     def _default_style(self):
         return call_style
