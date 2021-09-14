@@ -1,9 +1,15 @@
 # easyrepr
 
+[![PyPI version][pypi-badge]][pypi-link]
+[![CircleCI][circleci-badge]][circleci-link]
 [![Read the Docs][rtd-badge]][rtd-link]
 
 Python decorator to automatically generate repr strings
 
+[pypi-badge]: https://badge.fury.io/py/easyrepr.svg
+[pypi-link]: https://pypi.org/project/easyrepr/
+[circleci-badge]: https://circleci.com/gh/chrisbouchard/easyrepr/tree/main.svg?style=shield
+[circleci-link]: https://circleci.com/gh/chrisbouchard/easyrepr/tree/main
 [rtd-badge]: https://readthedocs.org/projects/easyrepr/badge/
 [rtd-link]: https://easyrepr.readthedocs.io/en/latest/
 
