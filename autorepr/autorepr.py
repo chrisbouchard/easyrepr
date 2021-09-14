@@ -39,7 +39,7 @@ def autorepr(wrapped=None, **kwargs):
 
         autorepr(fn, style="<>")
 
-    or it may be split ::
+    or the wrapped function may be provided in a second call ::
 
         autorepr(style="<>")(fn)
 
