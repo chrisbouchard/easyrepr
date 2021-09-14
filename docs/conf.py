@@ -56,7 +56,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 html_theme = "alabaster"
 
 html_theme_options = {
-    "github_banner": True,
     "github_user": "chrisbouchard",
     "github_repo": "easyrepr",
     "extra_nav_links": {
