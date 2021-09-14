@@ -3,8 +3,22 @@
 AutoRepr API
 ============
 
-Module ``autorepr``
--------------------
+Module :mod:`autorepr`
+----------------------
 
-.. automodule:: autorepr.autorepr
+.. automodule:: autorepr
+   :members:
+
+
+Module :mod:`autorepr.descriptor`
+---------------------------------
+
+.. automodule:: autorepr.descriptor
+   :members:
+
+
+Module :mod:`autorepr.style`
+----------------------------
+
+.. automodule:: autorepr.style
    :members:

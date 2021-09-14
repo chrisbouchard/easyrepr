@@ -1,3 +1,3 @@
 __all__ = ["autorepr"]
 
-from .autorepr import autorepr
+from .decorator import autorepr

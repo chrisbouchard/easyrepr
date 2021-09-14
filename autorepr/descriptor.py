@@ -1,58 +1,11 @@
 import functools
-import itertools
 import types
 from collections.abc import Sequence
 
-
-__all__ = [
-    "AutoRepr",
-    "angle_style",
-    "autorepr",
-    "call_style",
-    "format_attribute",
-]
+from .style import angle_style, call_style
 
 
-def autorepr(wrapped=None, **kwargs):
-    """Decorator for an automatic ``__repr__`` method.
-
-    This decorator wraps a function (which is available as `__wrapped__`). The
-    wrapped function should return a description of the attributes that should
-    be included in the repr.
-
-    >>> class UseAutoRepr:
-    ...     def __init__(self, foo, bar):
-    ...         self.foo = foo
-    ...         self.bar = bar
-    ...     @autorepr
-    ...     def __repr__(self):
-    ...         ...
-    ...
-    >>> x = UseAutoRepr(1, 2)
-    >>> repr(x)
-    'UseAutoRepr(foo=1, bar=2)'
-
-    See `AutoRepr` for a full description of the accepted parameters.
-
-    This function may be called with all arguments (wrapped function and
-    keyword arguments) up-front ::
-
-        autorepr(fn, style="<>")
-
-    or the wrapped function may be provided in a second call ::
-
-        autorepr(style="<>")(fn)
-
-    to make it easier to use this function as a decorator.
-    """
-
-    def _autorepr(_wrapped):
-        return AutoRepr(_wrapped, **kwargs)
-
-    if wrapped is None:
-        return _autorepr
-
-    return _autorepr(wrapped)
+__all__ = ["AutoRepr"]
 
 
 class _AutoReprBootstrap(type):
@@ -63,9 +16,9 @@ class _AutoReprBootstrap(type):
 
 
 class AutoRepr(metaclass=_AutoReprBootstrap):
-    """Descriptor for an automatic ``__repr__`` method.
+    """Descriptor for an automatic `__repr__` method.
 
-    :param wrapped: the wrapped function
+    :param wrapped: the function to wrap
     :param skip_private: skip private attributes --- i.e., those whose names
       start with an underscore ("_") --- when finding attributes for `None` or
       `Ellipsis`.
@@ -95,11 +48,11 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
     The style of the repr string returned is determined by the `style`
     parameter, which may be one of:
 
-    * ``"()"`` --- use the "call" style, defined by :func:`call_style`::
+    * ``"()"`` --- use the "call" style, defined by :func:`~.style.call_style`::
 
           "Klass(foo=1, bar=2)"
 
-    * ``"<>"`` --- use the "angle" style, defined by :func:`angle_style`::
+    * ``"<>"`` --- use the "angle" style, defined by :func:`~.style.angle_style`::
 
           "<Klass foo=1 bar=2>"
 
@@ -197,56 +150,3 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
         elif style == "()":
             return call_style
         return style
-
-
-def angle_style(instance, klass_name, attributes):
-    """Style function for an angular repr in the style of `object`.
-
-    :param instance: the object whose repr is being formatted
-    :param klass_name: the class name that should be displayed
-    :param attributes: the sequence of attribute pairs
-
-    ::
-
-        "<Klass foo=1 bar=2>"
-    """
-
-    formatted_attributes = map(format_attribute, attributes)
-    name_and_attributes = itertools.chain((klass_name,), formatted_attributes)
-    joined_contents = " ".join(name_and_attributes)
-
-    return f"<{joined_contents}>"
-
-
-def call_style(instance, klass_name, attributes):
-    """Style function for an angular repr in the style of a constructor call.
-
-    :param instance: the object whose repr is being formatted
-    :param klass_name: the class name that should be displayed
-    :param attributes: the sequence of attribute pairs
-
-    ::
-
-        "Klass(foo=1, bar=2)"
-    """
-
-    formatted_attributes = map(format_attribute, attributes)
-    joined_attributes = ", ".join(formatted_attributes)
-
-    return f"{klass_name}({joined_attributes})"
-
-
-def format_attribute(attribute):
-    if len(attribute) == 1:
-        (value,) = attribute
-        return repr(value)
-
-    key, value = attribute
-    value_str = repr(value)
-
-    if isinstance(key, str):
-        key_str = key
-    else:
-        key_str = repr(key)
-
-    return f"{key_str}={value_str}"
