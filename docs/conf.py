@@ -18,14 +18,14 @@
 # -- Project information -----------------------------------------------------
 import importlib.metadata
 
-autorepr_dist = importlib.metadata.distribution("autorepr")
+easyrepr_dist = importlib.metadata.distribution("easyrepr")
 
-project = autorepr_dist.metadata["Name"]
-author = autorepr_dist.metadata["Author"]
+project = easyrepr_dist.metadata["Name"]
+author = easyrepr_dist.metadata["Author"]
 copyright = f"2021 {author} & Contributors. Released under the MIT license"
 
 # The full version, including alpha/beta/rc tags
-release = autorepr_dist.version
+release = easyrepr_dist.version
 
 
 # -- General configuration ---------------------------------------------------

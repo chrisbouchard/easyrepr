@@ -1,10 +1,32 @@
-.. autorepr documentation master file, created by
-   sphinx-quickstart on Sun Sep 12 00:26:48 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+easyrepr
+========
 
-Welcome to autorepr's documentation!
-====================================
+Welcome to the documentation for easyrepr, a Python decorator to automatically
+generate repr strings.
+
+Example
+-------
+
+.. doctest::
+
+   >>> class UseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         ...
+   ...
+   >>> x = UseEasyRepr(1, 2)
+   >>> repr(x)
+   'UseEasyRepr(foo=1, bar=2)'
+
+Installation
+------------
+
+::
+
+    $ pip install easyrepr
 
 API Reference
 -------------

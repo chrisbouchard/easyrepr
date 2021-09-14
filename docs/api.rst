@@ -1,24 +1,24 @@
 .. default-role:: obj
 
-AutoRepr API
+EasyRepr API
 ============
 
-Module :mod:`autorepr`
+Module :mod:`easyrepr`
 ----------------------
 
-.. automodule:: autorepr
+.. automodule:: easyrepr
    :members:
 
 
-Module :mod:`autorepr.descriptor`
+Module :mod:`easyrepr.descriptor`
 ---------------------------------
 
-.. automodule:: autorepr.descriptor
+.. automodule:: easyrepr.descriptor
    :members:
 
 
-Module :mod:`autorepr.style`
+Module :mod:`easyrepr.style`
 ----------------------------
 
-.. automodule:: autorepr.style
+.. automodule:: easyrepr.style
    :members:
