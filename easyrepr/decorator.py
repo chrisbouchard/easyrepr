@@ -1,15 +1,15 @@
-from .descriptor import AutoRepr
+from .descriptor import EasyRepr
 
 
-__all__ = ["autorepr"]
+__all__ = ["easyrepr"]
 
 
-def autorepr(wrapped=None, **kwargs):
+def easyrepr(wrapped=None, **kwargs):
     """Decorator for an automatic `__repr__` method.
 
     :param wrapped: the function to wrap
 
-    See `.descriptor.AutoRepr` for a full description of the accepted
+    See `.descriptor.EasyRepr` for a full description of the accepted
     keyword parameters.
 
     This decorator wraps a function (which is available as `__wrapped__`). The
@@ -18,34 +18,34 @@ def autorepr(wrapped=None, **kwargs):
 
     .. doctest::
 
-       >>> class UseAutoRepr:
+       >>> class UseEasyRepr:
        ...     def __init__(self, foo, bar):
        ...         self.foo = foo
        ...         self.bar = bar
-       ...     @autorepr
+       ...     @easyrepr
        ...     def __repr__(self):
        ...         ...
        ...
-       >>> x = UseAutoRepr(1, 2)
+       >>> x = UseEasyRepr(1, 2)
        >>> repr(x)
-       'UseAutoRepr(foo=1, bar=2)'
+       'UseEasyRepr(foo=1, bar=2)'
 
     This function may be called with all arguments up-front (wrapped function
     and keyword arguments) ::
 
-        autorepr(fn, style="<>")
+        easyrepr(fn, style="<>")
 
     or the wrapped function may be provided in a second call ::
 
-        autorepr(style="<>")(fn)
+        easyrepr(style="<>")(fn)
 
     to make it easier to use this function as a decorator.
     """
 
-    def _autorepr(_wrapped):
-        return AutoRepr(_wrapped, **kwargs)
+    def _easyrepr(_wrapped):
+        return EasyRepr(_wrapped, **kwargs)
 
     if wrapped is None:
-        return _autorepr
+        return _easyrepr
 
-    return _autorepr(wrapped)
+    return _easyrepr(wrapped)

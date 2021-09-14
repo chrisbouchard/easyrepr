@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "autorepr"
+name = "easyrepr"
 version = "0.1.0"
 description = "Python decorator to automatically generate repr strings"
 authors = ["Chris Bouchard <chris@upliftinglemma.net>"]

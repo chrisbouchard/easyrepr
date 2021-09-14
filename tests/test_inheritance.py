@@ -1,4 +1,4 @@
-from autorepr import autorepr
+from easyrepr import easyrepr
 
 
 class AB:
@@ -6,7 +6,7 @@ class AB:
         self.a = a
         self.b = b
 
-    @autorepr
+    @easyrepr
     def __repr__(self):
         return ("a", "b")
 
@@ -17,7 +17,7 @@ class CD(AB):
         self.c = c
         self.d = d
 
-    @autorepr
+    @easyrepr
     def __repr__(self):
         return ("c", "d")
 
@@ -28,14 +28,14 @@ class EF(AB):
         self.e = e
         self.f = f
 
-    @autorepr
+    @easyrepr
     def __repr__(self):
         return ("e", "f")
 
 
 class Ignored:
     def __repr__(self):
-        return "<Ignored has its own non-autorepr __repr__>"
+        return "<Ignored has its own non-easyrepr __repr__>"
 
 
 class GH(EF, CD, Ignored):
@@ -44,7 +44,7 @@ class GH(EF, CD, Ignored):
         self.g = g
         self.h = h
 
-    @autorepr
+    @easyrepr
     def __repr__(self):
         return ("g", "h")
 

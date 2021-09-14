@@ -5,17 +5,17 @@ from collections.abc import Sequence
 from .style import angle_style, call_style
 
 
-__all__ = ["AutoRepr"]
+__all__ = ["EasyRepr"]
 
 
-class _AutoReprBootstrap(type):
+class _EasyReprBootstrap(type):
     def __new__(cls, name, bases, dct):
         klass = super().__new__(cls, name, bases, dct)
         klass.__repr__ = klass(klass.__repr__)
         return klass
 
 
-class AutoRepr(metaclass=_AutoReprBootstrap):
+class EasyRepr(metaclass=_EasyReprBootstrap):
     """Descriptor for an automatic `__repr__` method.
 
     :param wrapped: the function to wrap
@@ -82,7 +82,7 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
         for mro_type in reversed(type(instance).__mro__):
             repr_fn = getattr(mro_type, "__repr__", None)
 
-            if not isinstance(repr_fn, AutoRepr):
+            if not isinstance(repr_fn, EasyRepr):
                 continue
 
             if repr_fn.style is not None and style_fn is None:
@@ -98,9 +98,9 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
         klass_name = type(instance).__qualname__
         return style_fn(instance, klass_name, attributes)
 
-    # This method is not annotated with @autorepr because it's not available
+    # This method is not annotated with @easyrepr because it's not available
     # yet -- it needs *this* class to be defined. Instead, our metaclass,
-    # AutoReprBootstrap, will replace this method with an AutoRepr instance.
+    # EasyReprBootstrap, will replace this method with an EasyRepr instance.
     def __repr__(self):
         return (("wrapped", self.__wrapped__), ...)
 
@@ -121,7 +121,7 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
         if return_value is None:
             return self._find_all_attributes(instance)
         if isinstance(return_value, str):
-            raise ValueError("for a string repr, remove @autorepr")
+            raise ValueError("for a string repr, remove @easyrepr or EasyRepr")
 
         attributes = []
 

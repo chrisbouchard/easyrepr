@@ -1,4 +1,4 @@
-from autorepr import autorepr
+from easyrepr import easyrepr
 
 
 class Base:
@@ -8,13 +8,13 @@ class Base:
 
 
 class AngleStyleRepr(Base):
-    @autorepr(style="<>")
+    @easyrepr(style="<>")
     def __repr__(self):
         return ("foo", "bar")
 
 
 class CallStyleRepr(Base):
-    @autorepr(style="()")
+    @easyrepr(style="()")
     def __repr__(self):
         return ("foo", "bar")
 
@@ -29,7 +29,7 @@ class FnStyleRepr(Base):
         super().__init__(foo, bar)
         self.assert_fn = assert_fn
 
-    @autorepr(style=asserting_style_fn)
+    @easyrepr(style=asserting_style_fn)
     def __repr__(self):
         return ("foo", "bar")
 

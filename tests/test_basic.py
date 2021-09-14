@@ -1,8 +1,8 @@
-from autorepr import autorepr
+from easyrepr import easyrepr
 
 
 class BasicRepr:
-    """Basic class using an unconfigured autorepr for its __repr__"""
+    """Basic class using an unconfigured easyrepr for its __repr__"""
 
     def __init__(self, foo, bar):
         self.foo = foo
@@ -10,7 +10,7 @@ class BasicRepr:
 
     # We ignore type errors and the undefined name "Return" because this is
     # just for testing.
-    @autorepr
+    @easyrepr
     def __repr__(self) -> "Return":  # type: ignore # noqa: F821
         """Docstring for BasicRepr.__repr__"""
         return ("foo", "bar")
@@ -58,8 +58,8 @@ def test_basic_repr_with_objects():
     assert actual_repr == "BasicRepr(foo=<object named foo>, bar=<object named bar>)"
 
 
-def test_autorepr_preserves_relevant_attributes():
-    assert BasicRepr.__repr__.__module__ == "tests.test_autorepr"
+def test_easyrepr_preserves_relevant_attributes():
+    assert BasicRepr.__repr__.__module__ == "tests.test_basic"
     assert BasicRepr.__repr__.__name__ == "__repr__"
     assert BasicRepr.__repr__.__qualname__ == "BasicRepr.__repr__"
     assert BasicRepr.__repr__.__doc__ == "Docstring for BasicRepr.__repr__"
