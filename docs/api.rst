@@ -1,3 +1,5 @@
+.. default-role:: obj
+
 AutoRepr API
 ============
 
