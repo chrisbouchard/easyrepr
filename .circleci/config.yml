@@ -109,7 +109,7 @@ jobs:
     branches:
       ignore: /.*/
     tags:
-      only: /^\d+\.\d+\.\d+/
+      only: /^v\d+\.\d+\.\d+/
 
 workflows:
   version: 2
