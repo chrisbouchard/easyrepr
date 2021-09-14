@@ -21,8 +21,8 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     :param wrapped: the function to wrap
     :param skip_private: skip private attributes --- i.e., those whose names
       start with an underscore ("_") --- when finding attributes for `None` or
-      `Ellipsis`.
-    :param style: the style to use
+      `Ellipsis`. Default is `True`.
+    :param style: the style to use. Default is `None`.
 
     :ivar __wrapped__: the wrapped function
 
@@ -48,6 +48,8 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     The style of the repr string returned is determined by the `style`
     parameter, which may be one of:
 
+    * `None` --- inherit style from super class, or else default to "call"
+      style. (This is the default.)
     * ``"()"`` --- use the "call" style, defined by :func:`.style.call_style`::
 
           "Klass(foo=1, bar=2)"
