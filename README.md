@@ -1,8 +1,8 @@
 # autorepr
 
-Python decorator to automatically generate repr strings
-
 [![Read the Docs][rtd-badge]][rtd-link]
+
+Python decorator to automatically generate repr strings
 
 [rtd-badge]: https://readthedocs.org/projects/pip/badge/
 [rtd-link]: https://autorepr.readthedocs.io/en/latest/
