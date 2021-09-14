@@ -48,11 +48,11 @@ class AutoRepr(metaclass=_AutoReprBootstrap):
     The style of the repr string returned is determined by the `style`
     parameter, which may be one of:
 
-    * ``"()"`` --- use the "call" style, defined by :func:`~.style.call_style`::
+    * ``"()"`` --- use the "call" style, defined by :func:`.style.call_style`::
 
           "Klass(foo=1, bar=2)"
 
-    * ``"<>"`` --- use the "angle" style, defined by :func:`~.style.angle_style`::
+    * ``"<>"`` --- use the "angle" style, defined by :func:`.style.angle_style`::
 
           "<Klass foo=1 bar=2>"
 
