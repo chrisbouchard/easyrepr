@@ -1,18 +1,5 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import subprocess
+import sys
 
 
 # -- Project information -----------------------------------------------------
@@ -36,6 +23,7 @@ release = easyrepr_dist.version
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -73,3 +61,45 @@ html_static_path = ["_static"]
 # -- Extension configuration -------------------------------------------------
 
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
+
+
+# Get git commit and GitHub URL for linkcode
+try:
+    git_sha1 = subprocess.run(
+        "git rev-parse --short HEAD",
+        capture_output=True,
+        shell=True,
+        check=True,
+        text=True,
+    ).stdout.strip()
+except subprocess.SubprocessError as exc:
+    print("Cannot get git commit, disabling linkcode:", exc)
+    extensions.remove("sphinx.ext.linkcode")
+else:
+    github_base_url = f"https://github.com/chrisbouchard/easyrepr/blob/{git_sha1}"
+
+
+# Resolve function for the linkcode extension.
+def linkcode_resolve(domain, info):
+    def find_source():
+        # try to find the file and line number, based on code from numpy:
+        # https://github.com/numpy/numpy/blob/master/doc/source/conf.py#L286
+        obj = sys.modules[info["module"]]
+        for part in info["fullname"].split("."):
+            obj = getattr(obj, part)
+        import inspect
+        import os
+
+        fn = inspect.getsourcefile(obj)
+        fn = os.path.relpath(fn, start=os.path.abspath(".."))
+        source, lineno = inspect.getsourcelines(obj)
+        return fn, lineno, lineno + len(source) - 1
+
+    if domain != "py" or not info["module"]:
+        return None
+    try:
+        filename, start_line, end_line = find_source()
+        path_and_fragment = f"{filename}#L{start_line}-L{end_line}"
+    except Exception:
+        path_and_fragment = info["module"].replace(".", "/") + ".py"
+    return f"{github_base_url}/{path_and_fragment}"
