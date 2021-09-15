@@ -23,23 +23,11 @@ Example
 >>> repr(x)
 'UseEasyRepr(foo=1, bar=2)'
 
-Installation
-============
-
-.. code-block:: console
-
-   $ pip install easyrepr
-
-API Reference
-=============
+Contents
+========
 
 .. toctree::
 
+   guide
    api
-
-Additional Notes
-================
-
-.. toctree::
-
    license
