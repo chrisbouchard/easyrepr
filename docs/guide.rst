@@ -23,7 +23,7 @@ From Source
 -----------
 
 For development, you can check out the source `from GitHub`_ and create a
-virtual environment using |poetry-link|_.
+virtual environment `using Poetry`_.
 
 .. code-block:: console
    :caption: Install from source
@@ -33,8 +33,7 @@ virtual environment using |poetry-link|_.
    $ poetry install
 
 .. _from GitHub: https://github.com/chrisbouchard/easyrepr
-.. |poetry-link| replace:: ``poetry``
-.. _poetry-link: https://python-poetry.org/
+.. _using Poetry: https://python-poetry.org/
 
 
 Using easyrepr
