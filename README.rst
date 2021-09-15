@@ -1,3 +1,4 @@
+========
 easyrepr
 ========
 
@@ -14,7 +15,7 @@ easyrepr
 Python decorator to automatically generate repr strings
 
 Example
--------
+=======
 
 >>> class UseEasyRepr:
 ...     def __init__(self, foo, bar):
@@ -29,7 +30,7 @@ Example
 'UseEasyRepr(foo=1, bar=2)'
 
 Installation
-------------
+============
 
 ::
 
