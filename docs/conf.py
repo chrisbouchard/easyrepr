@@ -35,7 +35,6 @@ release = easyrepr_dist.version
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
 ]
 
