@@ -22,7 +22,7 @@ easyrepr_dist = importlib.metadata.distribution("easyrepr")
 
 project = easyrepr_dist.metadata["Name"]
 author = easyrepr_dist.metadata["Author"]
-copyright = f"2021 {author} & Contributors. Released under the MIT license"
+copyright = f"2021 {author} & Contributors"
 
 # The full version, including alpha/beta/rc tags
 release = easyrepr_dist.version

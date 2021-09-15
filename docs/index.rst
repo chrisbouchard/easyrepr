@@ -33,3 +33,10 @@ API Reference
 .. toctree::
 
    api
+
+Additional Notes
+================
+
+.. toctree::
+
+   license
