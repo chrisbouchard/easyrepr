@@ -32,6 +32,6 @@ Example
 Installation
 ============
 
-::
+.. code-block:: console
 
-    $ pip install easyrepr
+   $ pip install easyrepr
