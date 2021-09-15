@@ -8,6 +8,9 @@ generate repr strings.
 Example
 =======
 
+..
+    >>> from easyrepr import easyrepr
+
 >>> class UseEasyRepr:
 ...     def __init__(self, foo, bar):
 ...         self.foo = foo

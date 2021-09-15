@@ -12,6 +12,9 @@ def angle_style(instance, klass_name, attributes):
     :param attributes: the sequence of attribute tuples
     :returns: the styled repr string
 
+    ..
+        >>> obj = object()
+
     >>> angle_style(obj, "Klass", [("foo", 1), ("bar", 2)])
     '<Klass foo=1 bar=2>'
     """
@@ -30,6 +33,9 @@ def call_style(instance, klass_name, attributes):
     :param klass_name: the class name that should be displayed
     :param attributes: the sequence of attribute tuples
     :returns: the styled repr string
+
+    ..
+        >>> obj = object()
 
     >>> call_style(obj, "Klass", [("foo", 1), ("bar", 2)])
     'Klass(foo=1, bar=2)'
