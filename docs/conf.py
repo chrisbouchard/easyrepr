@@ -1,9 +1,13 @@
+import importlib.metadata
+import logging
 import subprocess
 import sys
 
 
+logger = logging.getLogger(__name__)
+
+
 # -- Project information -----------------------------------------------------
-import importlib.metadata
 
 easyrepr_dist = importlib.metadata.distribution("easyrepr")
 
@@ -72,8 +76,8 @@ try:
         check=True,
         text=True,
     ).stdout.strip()
-except subprocess.SubprocessError as exc:
-    print("Cannot get git commit, disabling linkcode:", exc)
+except subprocess.SubprocessError:
+    logger.exception("Cannot get git commit, disabling linkcode.")
     extensions.remove("sphinx.ext.linkcode")
 else:
     github_base_url = f"https://github.com/chrisbouchard/easyrepr/blob/{git_sha1}"
