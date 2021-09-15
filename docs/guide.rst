@@ -33,3 +33,28 @@ virtual environment using |poetry-link|_.
 .. |poetry-link| replace:: ``poetry``
 .. _poetry-link: https://python-poetry.org/
 
+Using easyrepr
+==============
+
+The simplest way to use easyrepr is to decorate your :obj:`__repr__` method
+with the :func:`~easyrepr.easyrepr` decorator and return :obj:`None`, e.g.,
+with an empty function body. This will cause easyrepr to automatically generate
+a repr based on :func:`vars`.
+
+.. code-block:: pycon
+   :caption: Repr with all public attributes
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class UseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         ...
+   ...
+   >>> x = UseEasyRepr(1, 2)
+   >>> repr(x)
+   'UseEasyRepr(foo=1, bar=2)'
