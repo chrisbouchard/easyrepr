@@ -11,6 +11,8 @@ easyrepr
 .. image:: https://readthedocs.org/projects/easyrepr/badge/
    :alt: Read the Docs
    :target: https://easyrepr.readthedocs.io/en/latest/
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
 
 Python decorator to automatically generate repr strings
 
