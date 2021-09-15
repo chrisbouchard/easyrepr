@@ -13,6 +13,7 @@ Easyrepr is `available on PyPI`_, so the easiest method of installation is via
 ``pip``.
 
 .. code-block:: console
+   :caption: Install from PyPI
 
    $ pip install easyrepr
 
@@ -25,6 +26,7 @@ For development, you can check out the source `from GitHub`_ and create a
 virtual environment using |poetry-link|_.
 
 .. code-block:: console
+   :caption: Install from source
 
    $ git clone https://github.com/chrisbouchard/easyrepr.git
    $ cd easyrepr
