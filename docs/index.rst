@@ -1,3 +1,4 @@
+========
 easyrepr
 ========
 
@@ -5,7 +6,7 @@ Welcome to the documentation for easyrepr, a Python decorator to automatically
 generate repr strings.
 
 Example
--------
+=======
 
 .. doctest::
 
@@ -22,14 +23,14 @@ Example
    'UseEasyRepr(foo=1, bar=2)'
 
 Installation
-------------
+============
 
 ::
 
     $ pip install easyrepr
 
 API Reference
--------------
+=============
 
 .. toctree::
 
