@@ -180,9 +180,9 @@ To make easyrepr include private attributes for :obj:`Ellipsis` (and when
 
 .. note::
 
-   The ``skip_private`` argument only affects how :obj:`None` and
-   :obj:`Ellipsis` are handled. Attribute names specified as strings are always
-   included.
+   The :obj:`~easyrepr.easyrepr.skip_private` argument only affects how
+   :obj:`None` and :obj:`Ellipsis` are handled. Attributes specified as strings
+   or tuples are always included.
 
 .. code-block:: pycon
    :caption: Repr with a virtual attribute
