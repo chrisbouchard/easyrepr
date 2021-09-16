@@ -202,3 +202,103 @@ To make easyrepr include private attributes for :obj:`Ellipsis` (and when
    >>> x = UseEasyRepr(1, 2, 3)
    >>> repr(x)
    'UseEasyRepr(foo=1, bar=2, _baz=3, virtual=42)'
+
+
+Styles
+======
+
+You can use a style to change how easyrepr formats the repr it generates.
+
+"Call" Style
+------------
+
+The default style is "call" style, defined by
+:func:`easyrepr.style.call_style`, which formats the repr similar to a
+constructor call.
+
+To set the style, use the :obj:`~easyrepr.easyrepr.style` parameter to the
+:func:`~easyrepr.easyrepr` decorator. E.g., to explicitly set "call" style,
+pass ``style="()"`` (a string of open and close parentheses).
+
+.. code-block:: pycon
+   :caption: Repr using explicit "call" style
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class UseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr(style="()")
+   ...     def __repr__(self):
+   ...         ...
+   ...
+   >>> x = UseEasyRepr(1, 2)
+   >>> repr(x)
+   'UseEasyRepr(foo=1, bar=2)'
+
+"Angle" Style
+-------------
+
+The other built-in style is "angle" style, defined by
+:func:`easyrepr.style.angle_style`, which formats the repr similar to
+:func:`object.__repr__`. To set this style, pass ``style="<>"`` (a string of
+less-than sign and greater-than sign).
+
+.. code-block:: pycon
+   :caption: Repr using "angle" style
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class UseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr(style="<>")
+   ...     def __repr__(self):
+   ...         ...
+   ...
+   >>> x = UseEasyRepr(1, 2)
+   >>> repr(x)
+   '<UseEasyRepr foo=1 bar=2>'
+
+User-Defined Style
+------------------
+
+You may also pass a user-defined style function. The function should accept
+three parameters: the object instance, the computed class name, and an iterable
+of attribute descriptions (tuples of length one or two).
+
+When implementing a style function, the :func:`easyrepr.style.format_attribute`
+utility function is useful to format the attribute description tuples.
+
+.. code-block:: pycon
+   :caption: Repr with a user-defined style function
+
+   >>> from easyrepr import easyrepr, style
+   ...
+   >>> def my_style(obj, class_name, attributes):
+   ...     formatted_attributes = ", ".join(
+   ...         map(style.format_attribute, attributes)
+   ...     )
+   ...     obj_id = id(obj)
+   ...     return (
+   ...         f"{class_name}"
+   ...         f" with id {obj_id}"
+   ...         f" and attributes {formatted_attributes}"
+   ...     )
+   ...
+   >>> class UseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr(style=my_style)
+   ...     def __repr__(self):
+   ...         ...
+   ...
+   >>> x = UseEasyRepr(1, 2)
+   >>> repr(x)  # doctest: +ELLIPSIS
+   'UseEasyRepr with id ... and attributes foo=1, bar=2'
