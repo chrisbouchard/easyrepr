@@ -4,7 +4,7 @@ import itertools
 __all__ = ["angle_style", "call_style", "format_attribute"]
 
 
-def angle_style(instance, klass_name, attributes):
+def angle_style(instance, class_name, attributes):
     """Style function for an angular repr in the style of `object`.
 
     :param instance: the object whose repr is being formatted
@@ -12,20 +12,21 @@ def angle_style(instance, klass_name, attributes):
     :param attributes: the sequence of attribute tuples
     :returns: the styled repr string
 
-    .. doctest::
+    ..
+        >>> obj = object()
 
-       >>> angle_style(obj, "Klass", [("foo", 1), ("bar", 2)])
-       '<Klass foo=1 bar=2>'
+    >>> angle_style(obj, "Klass", [("foo", 1), ("bar", 2)])
+    '<Klass foo=1 bar=2>'
     """
 
     formatted_attributes = map(format_attribute, attributes)
-    name_and_attributes = itertools.chain((klass_name,), formatted_attributes)
+    name_and_attributes = itertools.chain((class_name,), formatted_attributes)
     joined_contents = " ".join(name_and_attributes)
 
     return f"<{joined_contents}>"
 
 
-def call_style(instance, klass_name, attributes):
+def call_style(instance, class_name, attributes):
     """Style function for an angular repr in the style of a constructor call.
 
     :param instance: the object whose repr is being formatted
@@ -33,16 +34,17 @@ def call_style(instance, klass_name, attributes):
     :param attributes: the sequence of attribute tuples
     :returns: the styled repr string
 
-    .. doctest::
+    ..
+        >>> obj = object()
 
-       >>> call_style(obj, "Klass", [("foo", 1), ("bar", 2)])
-       'Klass(foo=1, bar=2)'
+    >>> call_style(obj, "Klass", [("foo", 1), ("bar", 2)])
+    'Klass(foo=1, bar=2)'
     """
 
     formatted_attributes = map(format_attribute, attributes)
     joined_attributes = ", ".join(formatted_attributes)
 
-    return f"{klass_name}({joined_attributes})"
+    return f"{class_name}({joined_attributes})"
 
 
 def format_attribute(attribute):

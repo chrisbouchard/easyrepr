@@ -16,19 +16,17 @@ def easyrepr(wrapped=None, **kwargs):
     wrapped function should return a description of the attributes that should
     be included in the repr.
 
-    .. doctest::
-
-       >>> class UseEasyRepr:
-       ...     def __init__(self, foo, bar):
-       ...         self.foo = foo
-       ...         self.bar = bar
-       ...     @easyrepr
-       ...     def __repr__(self):
-       ...         ...
-       ...
-       >>> x = UseEasyRepr(1, 2)
-       >>> repr(x)
-       'UseEasyRepr(foo=1, bar=2)'
+    >>> class UseEasyRepr:
+    ...     def __init__(self, foo, bar):
+    ...         self.foo = foo
+    ...         self.bar = bar
+    ...     @easyrepr
+    ...     def __repr__(self):
+    ...         ...
+    ...
+    >>> x = UseEasyRepr(1, 2)
+    >>> repr(x)
+    'UseEasyRepr(foo=1, bar=2)'
 
     This function may be called with all arguments up-front (wrapped function
     and keyword arguments) ::

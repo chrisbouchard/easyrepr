@@ -4,7 +4,7 @@ version = "0.3.1"
 description = "Python decorator to automatically generate repr strings"
 authors = ["Chris Bouchard <chris@upliftinglemma.net>"]
 license = "MIT"
-readme = "README.md"
+readme = "README.rst"
 homepage = "https://github.com/chrisbouchard/easyrepr"
 repository = "https://github.com/chrisbouchard/easyrepr"
 documentation = "https://easyrepr.readthedocs.io/"
@@ -19,11 +19,14 @@ classifiers = [
 python = "^3.8"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2"
 black = "^21.8b0"
 mypy = "^0.910"
 flake8 = "^3.9.2"
 Sphinx = "^4.1.2"
+
+[tool.pytest.ini_options]
+addopts = "--doctest-glob=*.rst --doctest-modules"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
