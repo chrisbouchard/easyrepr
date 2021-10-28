@@ -1,5 +1,8 @@
+import easyrepr
 import importlib.metadata
+import inspect
 import logging
+import pathlib
 import subprocess
 import sys
 
@@ -80,30 +83,38 @@ except subprocess.SubprocessError:
     logger.exception("Cannot get git commit, disabling linkcode.")
     extensions.remove("sphinx.ext.linkcode")
 else:
-    github_base_url = f"https://github.com/chrisbouchard/easyrepr/blob/{git_sha1}"
+    github_base_url = (
+        f"https://github.com/chrisbouchard/easyrepr/blob/{git_sha1}/easyrepr"
+    )
+
+# Get the base directory of the easyrepr module. We'll resolve files against
+# this directory.
+easyrepr_dir = pathlib.Path(inspect.getsourcefile(easyrepr)).parent.resolve()
+
+
+def find_source(module, fullname):
+    obj = sys.modules[module]
+    for part in fullname.split("."):
+        obj = getattr(obj, part)
+
+    source_file = pathlib.Path(inspect.getsourcefile(obj)).resolve()
+    filename = source_file.relative_to(easyrepr_dir)
+
+    source, start_line = inspect.getsourcelines(obj)
+    end_line = start_line + len(source) - 1
+
+    return filename, start_line, end_line
 
 
 # Resolve function for the linkcode extension.
 def linkcode_resolve(domain, info):
-    def find_source():
-        # try to find the file and line number, based on code from numpy:
-        # https://github.com/numpy/numpy/blob/master/doc/source/conf.py#L286
-        obj = sys.modules[info["module"]]
-        for part in info["fullname"].split("."):
-            obj = getattr(obj, part)
-        import inspect
-        import os
+    module = info["module"]
+    fullname = info["fullname"]
 
-        fn = inspect.getsourcefile(obj)
-        fn = os.path.relpath(fn, start=os.path.abspath(".."))
-        source, lineno = inspect.getsourcelines(obj)
-        return fn, lineno, lineno + len(source) - 1
-
-    if domain != "py" or not info["module"]:
+    if domain != "py" or not module:
         return None
-    try:
-        filename, start_line, end_line = find_source()
-        path_and_fragment = f"{filename}#L{start_line}-L{end_line}"
-    except Exception:
-        path_and_fragment = info["module"].replace(".", "/") + ".py"
-    return f"{github_base_url}/{path_and_fragment}"
+
+    filename, start_line, end_line = find_source(module, fullname)
+    fragment = f"L{start_line}-L{end_line}"
+
+    return f"{github_base_url}/{filename}#{fragment}"
