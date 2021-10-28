@@ -2,11 +2,13 @@ import easyrepr
 import importlib.metadata
 import inspect
 import logging
+import os
 import pathlib
 import subprocess
 import sys
 
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -70,9 +72,21 @@ html_static_path = ["_static"]
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 
+try:
+    linkcode_url_format = os.environ["LINKCODE_URL_FORMAT"]
+    # Read the Docs sometimes adds unnecessary quotes to environment variables.
+    # Until readthedocs/readthedocs.org#8636 is resolved, we need to strip them
+    # manually to be safe.
+    linkcode_url_format = linkcode_url_format.strip("'")
+except KeyError:
+    logger.exception(
+        "Environment variable LINKCODE_URL_FORMAT is not set, disabling linkcode."
+    )
+    extensions.remove("sphinx.ext.linkcode")
+
 # Get git commit and GitHub URL for linkcode
 try:
-    git_sha1 = subprocess.run(
+    git_hash = subprocess.run(
         "git rev-parse --short HEAD",
         capture_output=True,
         shell=True,
@@ -82,14 +96,12 @@ try:
 except subprocess.SubprocessError:
     logger.exception("Cannot get git commit, disabling linkcode.")
     extensions.remove("sphinx.ext.linkcode")
-else:
-    github_base_url = (
-        f"https://github.com/chrisbouchard/easyrepr/blob/{git_sha1}/easyrepr"
-    )
 
-# Get the base directory of the easyrepr module. We'll resolve files against
+# Get the parent directory of the easyrepr module. We'll resolve files against
 # this directory.
-easyrepr_dir = pathlib.Path(inspect.getsourcefile(easyrepr)).parent.resolve()
+# E.g., if easyrepr's source file is /foo/bar/easyrepr/__init__.py, we'll
+# resolve against /foo/bar.
+easyrepr_dir = pathlib.Path(inspect.getsourcefile(easyrepr)).parent.parent.resolve()
 
 
 def find_source(module, fullname):
@@ -115,6 +127,10 @@ def linkcode_resolve(domain, info):
         return None
 
     filename, start_line, end_line = find_source(module, fullname)
-    fragment = f"L{start_line}-L{end_line}"
 
-    return f"{github_base_url}/{filename}#{fragment}"
+    return linkcode_url_format.format(
+        git_hash=git_hash,
+        filename=filename,
+        start_line=start_line,
+        end_line=end_line,
+    )
