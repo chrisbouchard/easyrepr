@@ -85,6 +85,7 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
 
     def __set_name__(self, owner, name):
         self.__objclass__ = owner
+        self._name = name
 
     def __get__(self, instance, owner=None):
         if instance is None:
@@ -96,7 +97,7 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
         style_fn = None
 
         for mro_type in reversed(type(instance).__mro__):
-            repr_fn = mro_type.__dict__.get("__repr__", None)
+            repr_fn = mro_type.__dict__.get(self._name, None)
 
             if not isinstance(repr_fn, EasyRepr):
                 continue
