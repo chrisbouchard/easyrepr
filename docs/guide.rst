@@ -315,8 +315,8 @@ configuration of their ancestors, to which they can append new attributes.
 Simple Inheritance
 ------------------
 
-If an ancestor class has an easyrepr :obj:`__repr__` method, the ancestor's
-attributes will be included first.
+If an ancestor class uses easyrepr, the ancestor's attributes will be included
+first.
 
 .. code-block:: pycon
    :caption: Repr with simple inheritance
@@ -348,9 +348,9 @@ attributes will be included first.
 Multiple Inheritance
 --------------------
 
-If a class has multiple ancestor classes with easyrepr :obj:`__repr__` methods,
-their attributes will be included in *reverse* MRO (method resolution order)---
-i.e., attributes of ancestor classes later in the MRO will be included earlier.
+If a class has multiple ancestor classes that use easyrepr, their attributes
+will be included in *reverse* MRO (method resolution order) --- i.e., attributes
+of ancestor classes later in the MRO will be included earlier.
 
 .. code-block:: pycon
    :caption: Repr with multiple inheritance
@@ -393,10 +393,9 @@ i.e., attributes of ancestor classes later in the MRO will be included earlier.
 Inheriting Style
 ----------------
 
-If this class's easyrepr :obj:`__repr__` does not set an explicit style, and an
-ancestor class's easyrepr :obj:`__repr__` method does, the closest ancestor
-class's style (in MRO order) will be used. (If no ancestor sets an explicit
-style, :ref:`the default will be used<"Call" Style>` as usual.)
+If a class does not set an explicit style, and an ancestor class does, the
+closest ancestor class's style (in MRO order) will be used. (If no ancestor sets
+an explicit style, :ref:`the default will be used<"Call" Style>` as usual.)
 
 .. code-block:: pycon
    :caption: Repr with inherited style
@@ -429,12 +428,13 @@ Inheritance with Ellipsis
 -------------------------
 
 If an ancestor class has an easyrepr :obj:`__repr__` method that uses
-:obj:`None` or :obj:`Ellipsis` (also spelled :any:`...`), that repr will include
-all attributes of the *object*, including those added by derived classes.
+:obj:`None` or :obj:`Ellipsis` (also spelled :any:`...`) to include all public
+attributes, that repr will include all attributes of the *object*, including
+those added by derived classes.
 
-This is not really a feature of inheritance --- any public attribute of the
-object, regardless of its source, would be included --- but it's worth noting in
-this section.
+This is not really a feature of inheritance --- *any* public attribute of the
+object, regardless of its source, would be included --- but it comes up most
+frequently with inheritance.
 
 .. code-block:: pycon
    :caption: Repr with simple inheritance
