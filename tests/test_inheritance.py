@@ -49,9 +49,31 @@ class GH(EF, CD, Ignored):
         return ("g", "h")
 
 
+class BaseWithEllipsis:
+    def __init__(self, *, a, b):
+        self.a = a
+        self.b = b
+
+    @easyrepr
+    def __repr__(self):
+        ...
+
+
+class EmptyDerived(BaseWithEllipsis):
+    pass
+
+
 def test_derived_repr():
     """Repr of a class hierarchy has attributes in reverse MRO"""
     obj = GH(a=1, b=2, c=3, d=4, e=5, f=6, g=7, h=8)
     actual_repr = repr(obj)
 
     assert actual_repr == "GH(a=1, b=2, c=3, d=4, e=5, f=6, g=7, h=8)"
+
+
+def test_derived_ellipsis():
+    """Repr of a class does not have duplicated attributes with inheritance"""
+    obj = EmptyDerived(a=1, b=2)
+    actual_repr = repr(obj)
+
+    assert actual_repr == "EmptyDerived(a=1, b=2)"
