@@ -82,7 +82,7 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
         style_fn = None
 
         for mro_type in reversed(type(instance).__mro__):
-            repr_fn = getattr(mro_type, "__repr__", None)
+            repr_fn = mro_type.__dict__.get("__repr__", None)
 
             if not isinstance(repr_fn, EasyRepr):
                 continue
