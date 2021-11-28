@@ -9,9 +9,23 @@ __all__ = ["EasyRepr"]
 
 
 class _EasyReprBootstrap(type):
+    """Use the EasyRepr to repr the EasyRepr.
+
+    We'd like to use EasyRepr for its own __repr__ implementation, but that
+    runs into a problem, because EasyRepr isn't available for use while its
+    class is still being defined. So this metaclass exists solely to wire up
+    EasyRepr.__repr__ after the fact.
+    """
+
     def __new__(cls, name, bases, dct):
         klass = super().__new__(cls, name, bases, dct)
-        klass.__repr__ = klass(klass.__repr__)
+
+        # Since we're adding this descriptor after klass was created, we're
+        # responsible for calling __set_name__ manually.
+        repr_descriptor = klass(klass.__repr__)
+        klass.__repr__ = repr_descriptor
+        repr_descriptor.__set_name__(klass, "__repr__")
+
         return klass
 
 
