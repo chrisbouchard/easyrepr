@@ -209,6 +209,8 @@ Styles
 
 You can use a style to change how easyrepr formats the repr it generates.
 
+.. _"Call" Style:
+
 "Call" Style
 ------------
 
@@ -302,3 +304,157 @@ utility function is useful to format the attribute description tuples.
    >>> x = UseEasyRepr(1, 2)
    >>> repr(x)  # doctest: +ELLIPSIS
    'UseEasyRepr with id ... and attributes foo=1, bar=2'
+
+
+Inheritance
+===========
+
+Easyrepr plays nicely with inheritance. In general, classes inherit the
+configuration of their ancestors, to which they can append new attributes.
+
+Simple Inheritance
+------------------
+
+If an ancestor class uses easyrepr, the ancestor's attributes will be included
+first.
+
+.. code-block:: pycon
+   :caption: Repr with simple inheritance
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class BaseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         return ('foo', 'bar')
+   ...
+   >>> class DerivedEasyRepr(BaseEasyRepr):
+   ...     def __init__(self, foo, bar, baz):
+   ...         super().__init__(foo, bar)
+   ...         self.baz = baz
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         return ('baz',)
+   ...
+   >>> x = DerivedEasyRepr(1, 2, 3)
+   >>> repr(x)
+   'DerivedEasyRepr(foo=1, bar=2, baz=3)'
+
+Multiple Inheritance
+--------------------
+
+If a class has multiple ancestor classes that use easyrepr, their attributes
+will be included in *reverse* MRO (method resolution order) --- i.e., attributes
+of ancestor classes later in the MRO will be included earlier.
+
+.. code-block:: pycon
+   :caption: Repr with multiple inheritance
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class BaseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         return ('foo', 'bar')
+   ...
+   >>> class MixinEasyRepr:
+   ...     def __init__(self, *args, a, b, c, **kwargs):
+   ...         super().__init__(*args, **kwargs)
+   ...         self.a = a
+   ...         self.b = b
+   ...         self.c = c
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         return ('a', 'b', 'c')
+   ...
+   >>> class DerivedEasyRepr(MixinEasyRepr, BaseEasyRepr):
+   ...     def __init__(self, foo, bar, baz, **kwargs):
+   ...         super().__init__(foo, bar, **kwargs)
+   ...         self.baz = baz
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         return ('baz',)
+   ...
+   >>> x = DerivedEasyRepr(1, 2, 3, a=4, b=5, c=6)
+   >>> repr(x)
+   'DerivedEasyRepr(foo=1, bar=2, a=4, b=5, c=6, baz=3)'
+
+Inheriting Style
+----------------
+
+If a class does not set an explicit style, and an ancestor class does, the
+closest ancestor class's style (in MRO order) will be used. (If no ancestor sets
+an explicit style, :ref:`the default will be used<"Call" Style>` as usual.)
+
+.. code-block:: pycon
+   :caption: Repr with inherited style
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class BaseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr(style='<>')
+   ...     def __repr__(self):
+   ...         return ('foo', 'bar')
+   ...
+   >>> class DerivedEasyRepr(BaseEasyRepr):
+   ...     def __init__(self, foo, bar, baz):
+   ...         super().__init__(foo, bar)
+   ...         self.baz = baz
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         return ('baz',)
+   ...
+   >>> x = DerivedEasyRepr(1, 2, 3)
+   >>> repr(x)
+   '<DerivedEasyRepr foo=1 bar=2 baz=3>'
+
+Inheritance with Ellipsis
+-------------------------
+
+If an ancestor class has an easyrepr :obj:`__repr__` method that uses
+:obj:`None` or :obj:`Ellipsis` (also spelled :any:`...`) to include all public
+attributes, that repr will include all attributes of the *object*, including
+those added by derived classes.
+
+This is not really a feature of inheritance --- *any* public attribute of the
+object, regardless of its source, would be included --- but it comes up most
+frequently with inheritance.
+
+.. code-block:: pycon
+   :caption: Repr with simple inheritance
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class BaseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr
+   ...     def __repr__(self):
+   ...         ...
+   ...
+   >>> class DerivedEasyRepr(BaseEasyRepr):
+   ...     def __init__(self, foo, bar, baz):
+   ...         super().__init__(foo, bar)
+   ...         self.baz = baz
+   ...
+   >>> x = DerivedEasyRepr(1, 2, 3)
+   >>> repr(x)
+   'DerivedEasyRepr(foo=1, bar=2, baz=3)'
