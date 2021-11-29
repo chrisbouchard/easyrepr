@@ -24,6 +24,16 @@ class Named:
         return f"<object named {self.name}>"
 
 
+class DifferentEasyreprMethod:
+    def __init__(self, foo, bar):
+        self.foo = foo
+        self.bar = bar
+
+    @easyrepr
+    def other_method(self):
+        ...
+
+
 def test_basic_repr_free():
     """Free repr function with simple arguments returns repr"""
     obj = BasicRepr(1, 2)
@@ -64,3 +74,11 @@ def test_easyrepr_preserves_relevant_attributes():
     assert BasicRepr.__repr__.__qualname__ == "BasicRepr.__repr__"
     assert BasicRepr.__repr__.__doc__ == "Docstring for BasicRepr.__repr__"
     assert BasicRepr.__repr__.__annotations__ == {"return": "Return"}
+
+
+def test_name_other_than_repr():
+    """Easyrepr decorator on a method other than __repr__"""
+    obj = DifferentEasyreprMethod(1, 2)
+    actual_repr = obj.other_method()
+
+    assert actual_repr == "DifferentEasyreprMethod(foo=1, bar=2)"

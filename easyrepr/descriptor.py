@@ -1,4 +1,5 @@
 import functools
+import inspect
 import types
 from collections.abc import Sequence
 
@@ -9,9 +10,23 @@ __all__ = ["EasyRepr"]
 
 
 class _EasyReprBootstrap(type):
+    """Use the EasyRepr to repr the EasyRepr.
+
+    We'd like to use EasyRepr for its own __repr__ implementation, but that
+    runs into a problem, because EasyRepr isn't available for use while its
+    class is still being defined. So this metaclass exists solely to wire up
+    EasyRepr.__repr__ after the fact.
+    """
+
     def __new__(cls, name, bases, dct):
         klass = super().__new__(cls, name, bases, dct)
-        klass.__repr__ = klass(klass.__repr__)
+
+        # Since we're adding this descriptor after klass was created, we're
+        # responsible for calling __set_name__ manually.
+        repr_descriptor = klass(klass.__repr__)
+        klass.__repr__ = repr_descriptor
+        repr_descriptor.__set_name__(klass, "__repr__")
+
         return klass
 
 
@@ -65,12 +80,14 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     """
 
     def __init__(self, wrapped, *, skip_private=True, style=None):
+        self._check_wrapped(wrapped)
         functools.update_wrapper(self, wrapped)
         self.skip_private = skip_private
         self.style = style
 
     def __set_name__(self, owner, name):
         self.__objclass__ = owner
+        self._name = name
 
     def __get__(self, instance, owner=None):
         if instance is None:
@@ -82,7 +99,7 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
         style_fn = None
 
         for mro_type in reversed(type(instance).__mro__):
-            repr_fn = mro_type.__dict__.get("__repr__", None)
+            repr_fn = mro_type.__dict__.get(self._name, None)
 
             if not isinstance(repr_fn, EasyRepr):
                 continue
@@ -105,6 +122,20 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     # EasyReprBootstrap, will replace this method with an EasyRepr instance.
     def __repr__(self):
         return (("wrapped", self.__wrapped__), ...)
+
+    def _check_wrapped(self, wrapped):
+        try:
+            signature = inspect.signature(wrapped)
+        except TypeError:
+            raise TypeError("wrapped value is not callable")
+
+        try:
+            signature.bind(None)
+        except TypeError:
+            raise TypeError(
+                "wrapped function is not callable with one positional argument "
+                "(self)"
+            )
 
     def _default_style(self):
         return call_style

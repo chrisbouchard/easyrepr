@@ -63,6 +63,27 @@ class EmptyDerived(BaseWithEllipsis):
     pass
 
 
+class BaseWithDifferentMethodName:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    @easyrepr
+    def other_method(self):
+        return ("a", "b")
+
+
+class DerivedWithDifferentMethodName(BaseWithDifferentMethodName):
+    def __init__(self, a, b, c, d):
+        super().__init__(a, b)
+        self.c = c
+        self.d = d
+
+    @easyrepr
+    def other_method(self):
+        return ("c", "d")
+
+
 def test_derived_repr():
     """Repr of a class hierarchy has attributes in reverse MRO"""
     obj = GH(a=1, b=2, c=3, d=4, e=5, f=6, g=7, h=8)
@@ -77,3 +98,11 @@ def test_derived_ellipsis():
     actual_repr = repr(obj)
 
     assert actual_repr == "EmptyDerived(a=1, b=2)"
+
+
+def test_inherited_different_method_name():
+    """Class using inheritance with a method name other than __repr__"""
+    obj = DerivedWithDifferentMethodName(a=1, b=2, c=3, d=4)
+    actual_repr = obj.other_method()
+
+    assert actual_repr == "DerivedWithDifferentMethodName(a=1, b=2, c=3, d=4)"
