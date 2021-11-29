@@ -1,4 +1,5 @@
 import functools
+import inspect
 import types
 from collections.abc import Sequence
 
@@ -79,6 +80,7 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     """
 
     def __init__(self, wrapped, *, skip_private=True, style=None):
+        self._check_wrapped(wrapped)
         functools.update_wrapper(self, wrapped)
         self.skip_private = skip_private
         self.style = style
@@ -120,6 +122,20 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     # EasyReprBootstrap, will replace this method with an EasyRepr instance.
     def __repr__(self):
         return (("wrapped", self.__wrapped__), ...)
+
+    def _check_wrapped(self, wrapped):
+        try:
+            signature = inspect.signature(wrapped)
+        except TypeError:
+            raise TypeError("wrapped value is not callable")
+
+        try:
+            signature.bind(None)
+        except TypeError:
+            raise TypeError(
+                "wrapped function is not callable with one positional argument "
+                "(self)"
+            )
 
     def _default_style(self):
         return call_style
