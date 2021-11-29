@@ -27,7 +27,7 @@ jobs:
           pkg-manager: poetry
       - run:
           name: Run black
-          command: poetry run black --check .
+          command: poetry run black --check --diff .
 
   lint:
     description: Check Lints
