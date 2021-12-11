@@ -2,14 +2,14 @@ from easyrepr.reflection import is_private, Mirror
 import pytest
 
 
-class A:
+class DictBase:
     def __init__(self):
         super().__init__()
         self.a1 = 1
         self._a2 = 2
 
 
-class B:
+class SlotsBase:
     __slots__ = ("b1", "_b2")
 
     def __init__(self):
@@ -18,7 +18,7 @@ class B:
         self._b2 = 4
 
 
-class C(B):
+class SlotsDerived(SlotsBase):
     __slots__ = ("c1", "_c2")
 
     def __init__(self):
@@ -28,14 +28,14 @@ class C(B):
         self.c1 = 5
 
 
-class D(C, A):
+class DictAndSlots(SlotsDerived, DictBase):
     def __init__(self):
         super().__init__()
         self.d1 = 7
         self._d2 = 8
 
 
-class E(C):
+class SlotsOneAttrUnset(SlotsDerived):
     __slots__ = ("e1", "e2")
 
     def __init__(self):
@@ -66,40 +66,40 @@ def test_is_private(attribute, value):
     ("test_class", "mirror_args", "expected_classes"),
     [
         pytest.param(
-            D,
+            DictAndSlots,
             {},
-            [object, A, B, C, D],
-            id="D with defaults",
+            [object, DictBase, SlotsBase, SlotsDerived, DictAndSlots],
+            id="DictAndSlots with defaults",
         ),
         pytest.param(
-            D,
+            DictAndSlots,
             {"top_down": True},
-            [object, A, B, C, D],
-            id="D with top_down=True",
+            [object, DictBase, SlotsBase, SlotsDerived, DictAndSlots],
+            id="DictAndSlots with top_down=True",
         ),
         pytest.param(
-            D,
+            DictAndSlots,
             {"top_down": False},
-            [D, C, B, A, object],
-            id="D with top_down=False",
+            [DictAndSlots, SlotsDerived, SlotsBase, DictBase, object],
+            id="DictAndSlots with top_down=False",
         ),
         pytest.param(
-            C,
+            SlotsDerived,
             {},
-            [object, B, C],
-            id="C with defaults",
+            [object, SlotsBase, SlotsDerived],
+            id="SlotsDerived with defaults",
         ),
         pytest.param(
-            C,
+            SlotsDerived,
             {"top_down": True},
-            [object, B, C],
-            id="C with top_down=True",
+            [object, SlotsBase, SlotsDerived],
+            id="SlotsDerived with top_down=True",
         ),
         pytest.param(
-            C,
+            SlotsDerived,
             {"top_down": False},
-            [C, B, object],
-            id="C with top_down=False",
+            [SlotsDerived, SlotsBase, object],
+            id="SlotsDerived with top_down=False",
         ),
     ],
 )
@@ -117,58 +117,58 @@ def test_mirror_reflect_classes(test_class, mirror_args, expected_classes):
     ("test_class", "mirror_args", "expected_attributes"),
     [
         pytest.param(
-            D,
+            DictAndSlots,
             {},
             ["b1", "c1", "a1", "d1"],
-            id="D with defaults",
+            id="DictAndSlots with defaults",
         ),
         pytest.param(
-            D,
+            DictAndSlots,
             {"hide_private": True},
             ["b1", "c1", "a1", "d1"],
-            id="D with hide_private=True",
+            id="DictAndSlots with hide_private=True",
         ),
         pytest.param(
-            D,
+            DictAndSlots,
             {"hide_private": False},
             ["b1", "_b2", "c1", "_c2", "a1", "_a2", "d1", "_d2"],
-            id="D with hide_private=False",
+            id="DictAndSlots with hide_private=False",
         ),
         pytest.param(
-            D,
+            DictAndSlots,
             {"hide_private": True, "top_down": False},
             ["c1", "b1", "a1", "d1"],
-            id="D with hide_private=True, top_down=False",
+            id="DictAndSlots with hide_private=True, top_down=False",
         ),
         pytest.param(
-            D,
+            DictAndSlots,
             {"hide_private": False, "top_down": False},
             ["c1", "_c2", "b1", "_b2", "a1", "_a2", "d1", "_d2"],
-            id="D with hide_private=False, top_down=False",
+            id="DictAndSlots with hide_private=False, top_down=False",
         ),
         pytest.param(
-            C,
+            SlotsDerived,
             {},
             ["b1", "c1"],
-            id="C with defaults",
+            id="SlotsDerived with defaults",
         ),
         pytest.param(
-            C,
+            SlotsDerived,
             {"hide_private": True},
             ["b1", "c1"],
-            id="C with hide_private=True",
+            id="SlotsDerived with hide_private=True",
         ),
         pytest.param(
-            C,
+            SlotsDerived,
             {"hide_private": False},
             ["b1", "_b2", "c1", "_c2"],
-            id="C with hide_private=False",
+            id="SlotsDerived with hide_private=False",
         ),
         pytest.param(
-            E,
+            SlotsOneAttrUnset,
             {},
             ["b1", "c1", "e1"],
-            id="E with defaults",
+            id="SlotsOneAttrUnset with defaults",
         ),
     ],
 )
