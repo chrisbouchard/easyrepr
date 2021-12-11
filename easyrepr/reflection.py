@@ -45,7 +45,11 @@ class Mirror:
         for klass in self.reflect_classes(instance):
             slots = klass.__dict__.get("__slots__", None)
             if slots is not None:
-                attributes.extend(self._filter_private_attributes(slots))
+                attributes.extend(
+                    attribute
+                    for attribute in self._filter_private_attributes(slots)
+                    if hasattr(instance, attribute)
+                )
 
         if hasattr(instance, "__dict__"):
             attributes.extend(self._filter_private_attributes(instance.__dict__.keys()))
