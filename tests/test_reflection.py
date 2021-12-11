@@ -23,7 +23,7 @@ class C(B):
 
     def __init__(self):
         super().__init__()
-        # These assignments are purposefully backwards.
+        # These assignments are intentionally backwards.
         self._c2 = 6
         self.c1 = 5
 
@@ -33,6 +33,15 @@ class D(C, A):
         super().__init__()
         self.d1 = 7
         self._d2 = 8
+
+
+class E(C):
+    __slots__ = ("e1", "e2")
+
+    def __init__(self):
+        super().__init__()
+        self.e1 = 9
+        # e2 intentionally left unset.
 
 
 @pytest.mark.parametrize(
@@ -154,6 +163,12 @@ def test_mirror_reflect_classes(test_class, mirror_args, expected_classes):
             {"hide_private": False},
             ["b1", "_b2", "c1", "_c2"],
             id="C with hide_private=False",
+        ),
+        pytest.param(
+            E,
+            {},
+            ["b1", "c1", "e1"],
+            id="E with defaults",
         ),
     ],
 )
