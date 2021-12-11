@@ -3,6 +3,7 @@ import inspect
 import types
 from collections.abc import Sequence
 
+from .reflection import Mirror
 from .style import angle_style, call_style
 
 
@@ -82,8 +83,9 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     def __init__(self, wrapped, *, skip_private=True, style=None):
         self._check_wrapped(wrapped)
         functools.update_wrapper(self, wrapped)
-        self.skip_private = skip_private
         self.style = style
+
+        self._mirror = Mirror(skip_private)
 
     def __set_name__(self, owner, name):
         self.__objclass__ = owner
@@ -98,7 +100,7 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
         attributes = []
         style_fn = None
 
-        for mro_type in reversed(type(instance).__mro__):
+        for mro_type in self._mirror.reflect_classes(instance):
             repr_fn = mro_type.__dict__.get(self._name, None)
 
             if not isinstance(repr_fn, EasyRepr):
@@ -108,8 +110,10 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
                 style_fn = self._resolve_style(repr_fn.style)
 
             return_value = repr_fn.__wrapped__(instance)
-            new_attributes = repr_fn._parse_repr_return_value(instance, return_value)
+            new_attributes = repr_fn._expand_repr_return_value(instance, return_value)
             attributes.extend(new_attributes)
+
+        attributes = self._process_attribute_sequence(instance, attributes)
 
         if style_fn is None:
             style_fn = self._resolve_style(self._default_style())
@@ -140,42 +144,47 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     def _default_style(self):
         return call_style
 
-    def _find_all_attributes(self, instance):
-        attributes = vars(instance).items()
-
-        if self.skip_private:
-            attributes = (
-                (name, value) for name, value in attributes if not name.startswith("_")
-            )
-
-        return attributes
-
-    def _parse_repr_return_value(self, instance, return_value):
+    def _expand_repr_return_value(self, instance, return_value):
         if return_value is None:
-            return self._find_all_attributes(instance)
+            return self._mirror.reflect_attributes(instance)
         if isinstance(return_value, str):
             raise ValueError("for a string repr, remove @easyrepr or EasyRepr")
+        if not isinstance(return_value, Sequence):
+            raise ValueError(
+                f"return value is not a sequence or None: {return_value!r}"
+            )
 
         attributes = []
 
         for item in return_value:
             if isinstance(item, str):
-                attributes.append(
-                    (item, getattr(instance, item)),
-                )
-            elif item == Ellipsis:
-                attributes.extend(self._find_all_attributes(instance))
-            else:
-                if not isinstance(item, Sequence):
-                    raise ValueError(f"attribute is not a sequence: {item}")
+                attributes.append(item)
+            elif isinstance(item, Sequence):
                 if len(item) < 1:
-                    raise ValueError(f"empty attribute: {item}")
+                    raise ValueError(f"empty attribute: {item!r}")
                 if len(item) > 2:
                     raise ValueError(f"attribute has too many items: {item!r}")
 
                 attributes.append(tuple(item))
+            elif item == Ellipsis:
+                attributes.extend(self._mirror.reflect_attributes(instance))
+            else:
+                raise ValueError(
+                    f"attribute is not a string, sequence, or ellipsis: {item!r}"
+                )
 
         return attributes
+
+    def _process_attribute_sequence(self, instance, attributes):
+        processed_attributes = []
+
+        for attribute in attributes:
+            if isinstance(attribute, str):
+                processed_attributes.append((attribute, getattr(instance, attribute)))
+            else:
+                processed_attributes.append(attribute)
+
+        return processed_attributes
 
     def _resolve_style(self, style):
         if style == "<>":
