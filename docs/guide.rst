@@ -458,3 +458,42 @@ frequently with inheritance.
    >>> x = DerivedEasyRepr(1, 2, 3)
    >>> repr(x)
    'DerivedEasyRepr(foo=1, bar=2, baz=3)'
+
+Overriding Inherited Methods
+----------------------------
+
+A class can override the usual search for ancestor :obj:`__repr__` methods by
+passing ``override=True`` to :func:`~easyrepr.easyrepr`.
+
+.. note::
+
+  Even with ``override=True``, :obj:`__repr__` may still refer to attributes set
+  by ancestor classes (even private ones, if desired) since attributes are not
+  actually associated to a class.
+
+.. code-block:: pycon
+   :caption: Repr overriding inherited method
+
+   >>> from easyrepr import easyrepr
+   ...
+   >>> class BaseEasyRepr:
+   ...     def __init__(self, foo, bar):
+   ...         self.foo = foo
+   ...         self.bar = bar
+   ...
+   ...     @easyrepr(style='<>')
+   ...     def __repr__(self):
+   ...         return ('foo', 'bar')
+   ...
+   >>> class DerivedEasyRepr(BaseEasyRepr):
+   ...     def __init__(self, foo, bar, baz):
+   ...         super().__init__(foo, bar)
+   ...         self.baz = baz
+   ...
+   ...     @easyrepr(override=True)
+   ...     def __repr__(self):
+   ...         return ('baz',)
+   ...
+   >>> x = DerivedEasyRepr(1, 2, 3)
+   >>> repr(x)
+   'DerivedEasyRepr(baz=3)'
