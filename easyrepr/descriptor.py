@@ -115,7 +115,7 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
             if not isinstance(repr_fn, EasyRepr):
                 continue
 
-            if repr_fn.style is not None and style_fn is None:
+            if repr_fn.style is not None:
                 style_fn = self._resolve_style(repr_fn.style)
 
             return_value = repr_fn.__wrapped__(instance)
