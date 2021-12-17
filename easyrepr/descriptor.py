@@ -35,6 +35,8 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
     """Descriptor for an automatic `__repr__` method.
 
     :param wrapped: the function to wrap
+    :param override: completely replace ancestor methods rather than
+      concatenating to them. Default is `False`.
     :param skip_private: skip private attributes --- i.e., those whose names
       start with an underscore ("_") --- when finding attributes for `None` or
       `Ellipsis`. Default is `True`.
@@ -80,9 +82,11 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
       or ``(value,)``, as described above.
     """
 
-    def __init__(self, wrapped, *, skip_private=True, style=None):
+    def __init__(self, wrapped, *, override=False, skip_private=True, style=None):
         self._check_wrapped(wrapped)
         functools.update_wrapper(self, wrapped)
+
+        self.override = override
         self.style = style
 
         self._mirror = Mirror(skip_private)
@@ -100,13 +104,18 @@ class EasyRepr(metaclass=_EasyReprBootstrap):
         attributes = []
         style_fn = None
 
-        for mro_type in self._mirror.reflect_classes(instance):
+        if self.override:
+            search_classes = (type(instance),)
+        else:
+            search_classes = self._mirror.reflect_classes(instance)
+
+        for mro_type in search_classes:
             repr_fn = mro_type.__dict__.get(self._name, None)
 
             if not isinstance(repr_fn, EasyRepr):
                 continue
 
-            if repr_fn.style is not None and style_fn is None:
+            if repr_fn.style is not None:
                 style_fn = self._resolve_style(repr_fn.style)
 
             return_value = repr_fn.__wrapped__(instance)
