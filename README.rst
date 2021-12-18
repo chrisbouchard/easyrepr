@@ -71,7 +71,11 @@ For full documentation, check out `easyrepr on Read the Docs`_.
 License
 =======
 
+The MIT license applies to all files in the easyrepr repository and source
+distribution.
+
 MIT License
+-----------
 
 Copyright © 2021 Chris Bouchard & Contributors
 
