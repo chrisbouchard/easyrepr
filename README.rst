@@ -71,8 +71,10 @@ For full documentation, check out `easyrepr on Read the Docs`_.
 License
 =======
 
-The MIT license applies to all files in the easyrepr repository and source
+The `MIT license`_ applies to all files in the easyrepr repository and source
 distribution.
+
+.. _MIT license: https://choosealicense.com/licenses/mit/
 
 MIT License
 -----------
