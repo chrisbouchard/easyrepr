@@ -16,6 +16,7 @@ easyrepr
 
 Python decorator to automatically generate repr strings
 
+
 Example
 =======
 
@@ -36,9 +37,23 @@ Example
    >>> repr(x)
    'UseEasyRepr(foo=1, bar=2)'
 
+
 Installation
 ============
 
 .. code-block:: console
 
    $ pip install easyrepr
+
+
+Documentation
+=============
+
+For full documentation, check out `easyrepr on Read the Docs`_.
+
+* `User Guide`_
+* `API Reference`_
+
+.. _easyrepr on Read the Docs: https://easyrepr.readthedocs.io/en/latest/
+.. _User Guide: https://easyrepr.readthedocs.io/en/latest/guide.html
+.. _API Reference: https://easyrepr.readthedocs.io/en/latest/api.html
