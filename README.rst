@@ -41,9 +41,18 @@ Example
 Installation
 ============
 
+Easyrepr is `available on PyPI`_, so the easiest method of installation is via
+``pip``.
+
 .. code-block:: console
 
    $ pip install easyrepr
+
+For more installation options, see the `Installation section in the User Guide`_.
+
+.. _available on PyPI: https://pypi.org/project/easyrepr/
+.. _Installation section in the User Guide:
+   https://easyrepr.readthedocs.io/en/latest/guide.html#installation
 
 
 Documentation
