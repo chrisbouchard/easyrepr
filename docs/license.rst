@@ -10,5 +10,5 @@ distribution.
 MIT License
 ===========
 
-.. include:: ../LICENSE
-   :start-after: MIT License
+.. include:: ../LICENSE.rst
+   :start-line: 4
