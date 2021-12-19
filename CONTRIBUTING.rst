@@ -85,14 +85,20 @@ Code Structure
 The easyrepr library itself lives in the ``easyrepr`` directory. It comprises a
 few submodules:
 
-* ``decorator``: The definition of the ``@easyrepr`` decorator. This is the
-  main entrypoint into the library for users.
-* ``descriptor``: The definition of the ``EasyRepr`` descriptor, and the core
-  component of the library. ``EasyRepr`` is not directly exported, but used
-  through the ``@easyrepr`` directive.
-* ``reflection``: Internal utilities around inspecting objects for their
-  attributes.
-* ``style``: Style function definitions to format repr strings.
+``easyrepr.decorator``
+  The definition of the ``@easyrepr`` decorator. This is the main entrypoint
+  into the library for users.
+
+``easyrepr.descriptor``
+  The definition of the ``EasyRepr`` descriptor, and the core component of the
+  library. ``EasyRepr`` is not directly exported, but used through the
+  ``@easyrepr`` directive.
+
+``easyrepr.reflection``
+  Internal utilities around inspecting objects for their attributes.
+
+``easyrepr.style``
+  Style function definitions to format repr strings.
 
 
 Code Standards
