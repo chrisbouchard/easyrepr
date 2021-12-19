@@ -125,4 +125,19 @@ Testing
 Easyrepr uses `PyTest`_ to run unit tests. All functionality *should* be covered
 by a unit test, though we do not currently measure coverage.
 
+You can run tests inside your Poetry virtual environment:
+
+.. code-block:: console
+
+   $ poetry run pytest
+
+The projects PyTest configuration will run all tests detected in the ``tests``
+directory, as well as doctests for all ``pycon`` code blocks in the
+documentation. Note: We don't consider the doctests for test coverage; their
+purpose is to help ensure that our documentation stays correct as the code
+evolves.
+
+All new features or bug fixes must be covered by a unit test to be merged into
+``main``.
+
 .. _PyTest: https://docs.pytest.org
