@@ -68,6 +68,16 @@ For full documentation, check out `easyrepr on Read the Docs`_.
 .. _API Reference: https://easyrepr.readthedocs.io/en/latest/api.html
 
 
+Contributing
+============
+
+If you're interesting in contributing to easyrepr, or just want to learn more
+about how the project is built or structured, please read our `CONTRIBUTING
+file`_.
+
+.. _CONTRIBUTING file: CONTRIBUTING.rst
+
+
 License
 =======
 
