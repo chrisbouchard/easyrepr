@@ -19,8 +19,8 @@ Important Resources
 
 .. _Project page on GitHub: https://github.com/chrisbouchard/easyrepr
 .. _Project page on PyPI: https://pypi.org/project/easyrepr/
-.. _Documentation on Read the Docs: https://easyrepr.readthedocs.io/en/latest/
-.. _CI Pipeline on CircleCI: https://circleci.com/gh/chrisbouchard/easyrepr/tree/main
+.. _Documentation on Read the Docs: https://easyrepr.readthedocs.io
+.. _CI Pipeline on CircleCI: https://circleci.com/gh/chrisbouchard/easyrepr
 
 
 Contributing
@@ -74,7 +74,7 @@ Checkout `Poetry's documentation`_ for a more thorough explanation of what you
 can do.
 
 .. _pyproject.toml: pyproject.toml
-.. _Poetry: https://python-poetry.org/
+.. _Poetry: https://python-poetry.org
 .. _installed Poetry: https://python-poetry.org/docs/
 .. _Poetry's documentation: https://python-poetry.org/docs/basic-usage/
 
@@ -115,8 +115,8 @@ line that triggers an insane lint error. All linter comments *must* be preceded
 by a comment explaining why it's necessary to ignore this particular error in
 this particular location.
 
-.. _Black: https://black.readthedocs.io/en/stable/
-.. _flake8: https://flake8.pycqa.org/en/latest/
+.. _Black: https://black.readthedocs.io
+.. _flake8: https://flake8.pycqa.org
 
 
 Testing
