@@ -32,14 +32,14 @@ document all my own plans and ideas for the project, it's possible your change
 is one I'm already working on, or possibly one that I will soon render
 unnceessary by a different change.
 
-After creating an issue, you're welcome to follow up with a merge request. I'll
-review your merge request as soon as I have time. If you are not comfortable
+After creating an issue, you're welcome to follow up with a pull request. I'll
+review your pull request as soon as I have time. If you are not comfortable
 making the change yourself, and I think the change is a good one, I would be
 happy to do it myself as time allows.
 
 All changes must include unit tests to cover the new functionality or fix, as
-well as new or updated documentation as appropriate. All merge requests must
-pass the CI (continuous integration) pipeline on CircleCI to be merged into the
+well as new or updated documentation as appropriate. All pull requests must pass
+the CI (continuous integration) pipeline on CircleCI to be merged into the
 ``main`` branch.
 
 
@@ -145,7 +145,7 @@ All new features or bug fixes must be covered by new unit tests.
 Documenting
 -----------
 
-The project documentation lives in ``docs``. We use `Sphinx`_ to build the
+The documentation for easyrepr lives in ``docs``. We use `Sphinx`_ to build the
 documentation from the `reStructuredText`_ files in that directory.
 
 To build the documentation locally, use the ``Makefile`` in the ``docs``
