@@ -1,4 +1,6 @@
+===========
 MIT License
+===========
 
 Copyright © 2021 Chris Bouchard & Contributors
 

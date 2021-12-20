@@ -16,6 +16,7 @@ easyrepr
 
 Python decorator to automatically generate repr strings
 
+
 Example
 =======
 
@@ -36,9 +37,52 @@ Example
    >>> repr(x)
    'UseEasyRepr(foo=1, bar=2)'
 
+
 Installation
 ============
+
+Easyrepr is `available on PyPI`_, so the easiest method of installation is via
+``pip``.
 
 .. code-block:: console
 
    $ pip install easyrepr
+
+For more installation options, see the `Installation section in the User Guide`_.
+
+.. _available on PyPI: https://pypi.org/project/easyrepr/
+.. _Installation section in the User Guide:
+   https://easyrepr.readthedocs.io/en/latest/guide.html#installation
+
+
+Documentation
+=============
+
+For full documentation, check out `easyrepr on Read the Docs`_.
+
+* `User Guide`_
+* `API Reference`_
+
+.. _easyrepr on Read the Docs: https://easyrepr.readthedocs.io/en/latest/
+.. _User Guide: https://easyrepr.readthedocs.io/en/latest/guide.html
+.. _API Reference: https://easyrepr.readthedocs.io/en/latest/api.html
+
+
+Contributing
+============
+
+If you're interesting in contributing to easyrepr, or just want to learn more
+about how the project is built or structured, please read our `CONTRIBUTING
+file`_.
+
+.. _CONTRIBUTING file: CONTRIBUTING.rst
+
+
+License
+=======
+
+The `MIT license`_ applies to all files in the easyrepr repository and source
+distribution. See the `LICENSE file`_ for more info.
+
+.. _MIT license: https://choosealicense.com/licenses/mit/
+.. _LICENSE file: LICENSE.rst

@@ -1,8 +1,8 @@
 .. default-role:: obj
 
-============
-EasyRepr API
-============
+=============
+API Reference
+=============
 
 Module :mod:`easyrepr`
 ======================
