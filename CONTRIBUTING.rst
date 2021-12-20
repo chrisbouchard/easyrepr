@@ -140,3 +140,27 @@ evolves.
 All new features or bug fixes must be covered by new unit tests.
 
 .. _PyTest: https://docs.pytest.org
+
+
+Documenting
+-----------
+
+The project documentation lives in ``docs``. We use `Sphinx`_ to build the
+documentation from the `reStructuredText`_ files in that directory.
+
+To build the documentation locally, use the ``Makefile`` in the ``docs``
+directory. This requires you have a ``make`` tool installed.
+
+.. code-block:: console
+
+   $ poetry run make html
+
+Note that you'll need to run ``make`` inside the Poetry virtual environment.
+
+All new features should include a new section in the documentation explaining its
+use, and an example ``pycon`` code block demonstrating it. The example code
+blocks are automatically tested by PyTest so that we can keep the documentation
+up-to-date as the project evolves.
+
+.. _Sphinx: https://www.sphinx-doc.org
+.. _reStructuredText: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
