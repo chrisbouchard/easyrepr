@@ -101,6 +101,8 @@ few submodules:
   Style function definitions to format repr strings.
 
 
+.. _section Code Standards:
+
 Code Standards
 --------------
 
@@ -118,6 +120,8 @@ this particular location.
 .. _Black: https://black.readthedocs.io
 .. _flake8: https://flake8.pycqa.org
 
+
+.. _section Testing:
 
 Testing
 -------
@@ -142,6 +146,19 @@ All new features or bug fixes must be covered by new unit tests.
 .. _PyTest: https://docs.pytest.org
 
 
+.. _section Typing:
+
+Typing
+------
+
+We do not currently require type annotations in easyrepr. However, we do run
+`MyPy`_ in our build pipeline as a sanity check.
+
+.. _MyPy: http://mypy-lang.org
+
+
+.. _section Documenting:
+
 Documenting
 -----------
 
@@ -164,3 +181,50 @@ up-to-date as the project evolves.
 
 .. _Sphinx: https://www.sphinx-doc.org
 .. _reStructuredText: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
+
+
+Build Processes
+===============
+
+Pull requests and merges into ``main`` trigger continuous integration processes.
+All CI checks must pass in order to merge a pull request into ``main``. These
+are managed via integrations between GitHub and the various other services.
+
+
+.. _section CircleCI:
+
+CircleCI
+--------
+
+The workflow in `CircleCI`_ will run `unit tests`_, `lints`_, and `static
+analysis`_ on each branch. It also attempts to build a wheel. The workflow is
+defined in ``.circleci/config.yml``.
+
+.. _CircleCI: https://circleci.com
+.. _unit tests: `section Testing`_
+.. _lints: `section Code Standards`_
+.. _static analysis: `section Typing`_
+
+
+Read the Docs
+-------------
+
+`Read the Docs`_ watches the project and rebuilds the `documentation`_ for each
+pull request and for ``main``.
+
+.. _Read the Docs: https://readthedocs.org
+.. _documentation: `section Documenting`_
+
+
+Tagged Releases
+---------------
+
+Releases of easyrepr are managed via tags, which are automatically detected by
+the workflow in Circle CI when they are pushed to ``main``. Release tags have
+the format ``vX.Y.Z``, where *X.Y.Z* (e.g., 1.2.3) is the version triple for the
+new release.
+
+Pushing a tag with this format to ``main`` will cause CircleCI to automatically
+publish the wheel to PyPI at the end of the `workflow`_.
+
+.. _workflow: `section CircleCI`_
